@@ -13,9 +13,9 @@ def read_data(path):
     row = []
     col = []
     values = []
-    r = 0       # 首行
+    r = 0  # 首行
     for d in open(path):
-        d = d.strip().split()      # 以空格分开
+        d = d.strip().split()  # 以空格分开
         y.append(int(d[0]))
         d = d[1:]
         for c in d:
@@ -31,8 +31,8 @@ def read_data(path):
 
 def show_accuracy(a, b, tip):
     acc = a.ravel() == b.ravel()
-    print acc
-    print tip + '正确率：\t', float(acc.sum()) / a.size
+    print(acc)
+    print(tip + '正确率：\t', float(acc.sum()) / a.size)
 
 
 if __name__ == '__main__':

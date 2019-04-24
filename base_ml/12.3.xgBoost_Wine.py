@@ -3,15 +3,15 @@
 
 import xgboost as xgb
 import numpy as np
-from sklearn.model_selection import train_test_split   # cross_validation
+from sklearn.model_selection import train_test_split  # cross_validation
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 
 def show_accuracy(a, b, tip):
     acc = a.ravel() == b.ravel()
-    print acc
-    print tip + '正确率：\t', float(acc.sum()) / a.size
+    print(acc)
+    print(tip + '正确率：\t', float(acc.sum()) / a.size)
 
 
 if __name__ == "__main__":
