@@ -25,7 +25,7 @@ y = df.target
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=1)
 
 model = RandomForestRegressor(
-    n_estimators=360,  # 学习器个数
+    n_estimators=40,  # 学习器个数
     # criterion='mse',  # 评价函数
     max_depth=23,  # 最大的树深度，防止过拟合
     min_samples_split=20,  # 根据属性划分节点时，每个划分最少的样本数

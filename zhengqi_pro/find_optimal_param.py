@@ -38,12 +38,13 @@ def validation_curve_demo(x, y, model, param_name, param_range):
     plt.show()
 
 
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 
 df = pd.read_csv('data/zhengqi_train.txt', sep='\t')
-param_range = [x for x in range(1, 30)]
+param_range = [x for x in range(1, 100)]
 
 x = df.iloc[:, :-1]
 y = df.target

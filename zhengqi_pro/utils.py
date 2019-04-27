@@ -10,6 +10,9 @@ from sklearn.model_selection import learning_curve
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.feature_selection import SelectFromModel
+from sklearn.model_selection import validation_curve
+from sklearn.model_selection import ShuffleSplit
+import seaborn as sns
 
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
@@ -114,3 +117,86 @@ def et_method(x, y):
     model = SelectFromModel(clf, prefit=True)
     x = model.transform(x)
     return x, y
+
+
+def validation_curve_demo(x, y, model, param_name, param_range):
+    """
+
+    :param x:
+    :param y:
+    :param model:
+    :param param_name:
+    :param param_range:
+    :return: 输出一个图像，用来选取最佳参数值
+    """
+
+    train_loss, test_loss = validation_curve(
+        model, x, y, param_name=param_name,
+        param_range=param_range, cv=5,
+        scoring='neg_mean_squared_error')
+    # print(train_loss, test_loss)
+    train_loss_mean = -np.mean(train_loss, axis=1)
+    test_loss_mean = -np.mean(test_loss, axis=1)
+
+    plt.plot(param_range, train_loss_mean, 'o-', color='r',
+             label='Training')
+    plt.plot(param_range, test_loss_mean, 'o-', color='g',
+             label='Cross-validation')
+
+    plt.xlabel(param_name)
+    plt.ylabel('Loss')
+    plt.legend(loc='best')
+    plt.show()
+
+
+# 画出学习曲线->判断过拟合和欠拟合
+def plot_learning_curve_new(estimator, X, y):
+    '''
+    输入：model, x, y
+    输出：画出学习曲线，来判断是否过拟合或者欠拟合。
+    '''
+    train_sizes = np.linspace(.1, 1.0, 5)
+    cv = ShuffleSplit(n_splits=10, test_size=0.2, random_state=0)
+
+    plt.figure()
+    plt.title('learning curve')
+
+    plt.xlabel("Training examples")
+    plt.ylabel("Score")
+    train_sizes, train_scores, test_scores = learning_curve(
+        estimator, X, y, cv=cv, n_jobs=1, train_sizes=train_sizes)
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+    plt.grid()
+
+    plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+                     train_scores_mean + train_scores_std, alpha=0.1,
+                     color="r")
+    plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
+                     test_scores_mean + test_scores_std, alpha=0.1, color="g")
+    plt.plot(train_sizes, train_scores_mean, 'o-', color="r",
+             label="Training score")
+    plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
+             label="Cross-validation score")
+
+    plt.legend(loc="best")
+    plt.show()
+
+
+
+def heat_grape(df):
+    '''
+    输入dataframe数据
+    输入特征之间的热力相关图
+    '''
+    # 找出相关程度
+    plt.figure(figsize=(20, 16))  # 指定绘图对象宽度和高度
+    colnm = df.columns.tolist()  # 列表头
+    mcorr = df[colnm].corr()  # 相关系数矩阵，即给出了任意两个变量之间的相关系数
+    mask = np.zeros_like(mcorr, dtype=np.bool)  # 构造与mcorr同维数矩阵 为bool型
+    mask[np.triu_indices_from(mask)] = True  # 角分线右侧为True
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)  # 返回matplotlib colormap对象
+    g = sns.heatmap(mcorr, mask=mask, cmap=cmap, square=True, annot=True, fmt='0.2f')  # 热力图（看两两相似度）
+    plt.show()

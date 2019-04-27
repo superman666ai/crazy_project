@@ -295,15 +295,12 @@ def Model_stack(df_train_x, df_train_y, df_test):
     stack_test['linear_model'] = linear_model.predict(df_test)
     stack_test['BR'] = BR_model.predict(df_test)
 
-    final_ans = rg.predict(stack_test)
-    pd.DataFrame(final_ans).to_csv('predict_drop2+3.txt', index=False, header=False)
-
-
-# 数据降维（主程序分析法）
-# n_components = 'mle' and svd_solver = 'full' to guess the dimension
+    # final_ans = rg.predict(stack_test)
+    # pd.DataFrame(final_ans).to_csv('predict_drop2+3.txt', index=False, header=False)
 
 
 if __name__ == "__main__":
+
     df_train = pd.read_table('data/zhengqi_train.txt')  # 获得训练数据
     df_test = pd.read_table('data/zhengqi_test.txt')  # 得到预测的数据s
 
@@ -345,7 +342,7 @@ if __name__ == "__main__":
                                      min_samples_leaf=10, max_features='sqrt',
                                      oob_score=True, random_state=10)
 
-    # Model_stack(df_train_x, df_train_y, df_test)
+    Model_stack(df_train_x, df_train_y, df_test)
 
     loss = kfold_loss(df_train_x, df_train_y)
     print('keras_model     : ', loss)
@@ -355,7 +352,7 @@ if __name__ == "__main__":
     print('ARDRegression   : ', cross_validation(df_train_x, df_train_y, ARD_model))
     print('RandomForest    : ', cross_validation(df_train_x, df_train_y, RF_model))
 
-    # 将最终预测结果保存到文件当中
-    BR_model.fit(df_train_x, df_train_y)
-    final_ans = BR_model.predict(df_test)
-    pd.DataFrame(final_ans).to_csv('predict_BR_drop_3.txt', index=False, header=False)
+    # # 将最终预测结果保存到文件当中
+    # BR_model.fit(df_train_x, df_train_y)
+    # final_ans = BR_model.predict(df_test)
+    # pd.DataFrame(final_ans).to_csv('predict_BR_drop_3.txt', index=False, header=False)

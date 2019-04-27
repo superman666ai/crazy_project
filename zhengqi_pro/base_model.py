@@ -16,6 +16,7 @@ from sklearn.kernel_ridge import KernelRidge
 from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import make_pipeline
 import xgboost as xgb
+from utils import plot_learning_curve_new
 from utils import plot_learning_curve
 from sklearn.model_selection import GridSearchCV
 
@@ -26,12 +27,16 @@ test_df = pd.read_csv('data/zhengqi_test.txt', sep='\t')
 
 # 数据处理
 drop_label = ['V32', 'V35', 'V17', 'V28', 'V21', 'V14', 'V22', 'V26', 'V5', 'V19', 'V27', 'V25', 'V29',
-              'V33', 'V34','V9']
+              'V33', 'V34', 'V9']
 df.drop(drop_label, axis=1, inplace=True)
 test_df.drop(drop_label, axis=1, inplace=True)
 
 x = df.iloc[:, :-1]
 y = df.target
+
+# 查看相关性
+# from utils import heat_grape
+# heat_grape(x)
 
 # # 标准化特征
 # mm = MinMaxScaler()
@@ -83,8 +88,6 @@ print("lasso回归 mean_squared_error", mean_squared_error(y_test, y_pred))
 # plot_learning_curve(model, title="lasso回归 learn_rate", X=x_train, y=y_train, cv=None)
 
 
-
-
 # model = SVR(kernel='rbf', C=1e3, gamma=0.1)
 # # model = SVR(kernel='linear', C=1e3)
 # # model = SVR(kernel='poly', C=1e3, degree=2)
@@ -96,8 +99,6 @@ print("lasso回归 mean_squared_error", mean_squared_error(y_test, y_pred))
 # print("SVR mean_squared_error", mean_squared_error(y_test, y_pred))
 # # 绘制学习率曲线
 # plot_learning_curve(model, title="SVR learn_rate", X=x_train, y=y_train, cv=None)
-
-
 
 
 #
@@ -116,7 +117,7 @@ print("score", score)
 y_pred = model.predict(x_test)
 print("BayesianRidge mean_squared_error", mean_squared_error(y_test, y_pred))
 # # # 绘制学习率曲线
-plot_learning_curve(model, title="BayesianRidge learn_rate", X=x_train, y=y_train, cv=200)
+# plot_learning_curve(model, title="BayesianRidge learn_rate", X=x_train, y=y_train, cv=200)
 
 # # random forest
 
@@ -138,8 +139,8 @@ print("随机森林 score", score)
 y_pred = model.predict(x_test)
 print("随机森林 mean_squared_error", mean_squared_error(y_test, y_pred))
 # 绘制学习率曲线
-# plot_learning_curve(model, title="随机森林 learn_rate", X=x_train, y=y_train, cv=None)
 
+# plot_learning_curve(model, title="random learn_rate", X=x_train, y=y_train, cv=10)
 
 # 极端随机森林
 # model =ExtraTreesRegressor()
@@ -156,8 +157,6 @@ print("随机森林 mean_squared_error", mean_squared_error(y_test, y_pred))
 # print(" xgboost mean_squared_error", mean_squared_error(y_test, y_pred))
 # 绘制学习率曲线
 # plot_learning_curve(model, title="learn_rate", X=x_train, y=y_train, cv=20)
-
-
 
 
 # 保存结果
