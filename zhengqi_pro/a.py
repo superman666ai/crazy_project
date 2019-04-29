@@ -101,14 +101,25 @@ feature_scoring = pd.DataFrame({
 # print(feature_scoring.head())
 head_feature_num = 18
 feat_scored_headnum = feature_scoring.sort_values('score', ascending=False).head(head_feature_num)['feature']
-
+# print("feat_scored_headnum", feat_scored_headnum)
 train_x_head = train_x[train_x.columns[train_x.columns.isin(feat_scored_headnum)]]
-
-print("train_x_head", train_x_head.shape)
+test1 = test[test.columns[test.columns.isin(feat_scored_headnum)]]
+print("train_x_head----", train_x_head.shape)
+print("test---", test1.shape)
 
 X_scaled = pd.DataFrame(preprocessing.scale(train_x),columns = train_x.columns)
 
 print("X_scaled", X_scaled.shape)
+
+
+head_feature_num = 22
+feat_scored_headnum = feature_scoring.sort_values('score', ascending=False).head(head_feature_num)['feature']
+train_x_head2 = train_x[train_x.columns[train_x.columns.isin(feat_scored_headnum)]]
+test2 = test[test.columns[test.columns.isin(feat_scored_headnum)]]
+print("train_x_head2", train_x_head2.shape)
+print("test2", test2.shape)
+
+
 
 # =============================================================================
 
