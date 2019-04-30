@@ -20,6 +20,7 @@ import numpy as np
 from sklearn.feature_selection import SelectKBest, f_regression, SelectPercentile, mutual_info_regression
 
 from a import train_x_head2, Y, np, test2
+
 test_df = test2
 Y = np.array(Y)[:, np.newaxis]
 
@@ -57,7 +58,6 @@ l2 = add_layer(l1, 100, 10, activation_function=tf.nn.tanh)
 
 l2 = tf.nn.dropout(l2, drop_out)
 
-
 prediction = add_layer(l2, 10, 1, activation_function=None)
 
 loss = tf.reduce_mean(tf.reduce_sum(tf.square(ys - prediction),
@@ -76,10 +76,10 @@ with tf.Session() as sess:
     sess.run(init)
 
     # Fit all training data
-    for i in range(1000000):
+    for i in range(10000):
         sess.run(train_step, feed_dict=feed_dict_train)
 
-        if i % 100 == 0:
+        if i % 50 == 0:
             train_acc = sess.run(loss, feed_dict=feed_dict_train)
             print("TRAIN ACCURACY: %.3f" % (train_acc))
 
@@ -87,20 +87,22 @@ with tf.Session() as sess:
             test_acc = sess.run(loss, feed_dict=feeds)
             print("TEST ACCURACY-----: %.3f" % (test_acc))
 
-
     saver_path = saver.save(sess, "save/model.ckpt")
     print("Model saved in file: ", saver_path)
 
-
 with tf.Session() as sess:
     saver.restore(sess, "save/model.ckpt")
+
+    feeds = {xs: x_test, ys: y_test}
+    test_acc = sess.run(loss, feed_dict=feeds)
+    print("TEST ACCURACY-----: %.3f" % (test_acc))
+
     y_pre = sess.run(prediction, feed_dict={xs: test_df})
     pre = pd.DataFrame(y_pre, columns=["0"])
     pre = pre["0"]
     save_result(list(pre))
 
-    print ("end")
-
+    print("end")
 
 """
 画出平面图形 
